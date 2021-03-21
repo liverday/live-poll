@@ -2,12 +2,12 @@
 import { v4 as uuid } from 'uuid';
 
 import ICreatePollVoteDTO from '@modules/polls/dtos/ICreatePollVoteDTO';
-import IFindPollVotesResultDTO from '@modules/polls/dtos/IFindPollVotesResultDTO';
+import IFindPollVotesResultDTO from '@modules/polls/dtos/IFindPollsVotesResultDTO';
 import PollVote from '@modules/polls/infra/typeorm/entities/PollVote';
 import IFindUniquePollVoteDTO from '@modules/polls/dtos/IFindUniquePollVoteDTO';
-import IPollVotesRepository from '../IPollsVotesRepository';
+import IPollsVotesRepository from '../IPollsVotesRepository';
 
-class FakePollVotesRepository implements IPollVotesRepository {
+class FakePollsVotesRepository implements IPollsVotesRepository {
   private pollsVotes: PollVote[] = [];
 
   public async create(data: ICreatePollVoteDTO): Promise<PollVote> {
@@ -18,6 +18,18 @@ class FakePollVotesRepository implements IPollVotesRepository {
     this.pollsVotes.push(pollVote);
 
     return pollVote;
+  }
+
+  public async save(data: PollVote): Promise<PollVote> {
+    const pollVoteIndex = this.pollsVotes.findIndex(
+      pollVote => pollVote.id === data.id,
+    );
+
+    if (pollVoteIndex >= 0) {
+      this.pollsVotes[pollVoteIndex] = data;
+    }
+
+    return data;
   }
 
   public async findPollResultById(
@@ -35,22 +47,22 @@ class FakePollVotesRepository implements IPollVotesRepository {
     };
 
     const result = this.pollsVotes.reduce(
-      (current, accumulator, _) => {
-        const foundIndex = current.items.findIndex(
-          item => item.alternative.id === accumulator.poll_alternative_id,
+      (accumulator, current, _) => {
+        const foundIndex = accumulator.items.findIndex(
+          item => item.poll_alternative_id === current.poll_alternative_id,
         );
 
         if (foundIndex === 0) {
-          current.items.push({
-            alternative: accumulator.alternative,
+          accumulator.items.push({
+            poll_alternative_id: current.alternative.id,
             votes: 1,
           });
         } else {
-          current.items[foundIndex].votes += 1;
+          accumulator.items[foundIndex].votes += 1;
         }
 
-        current.total += 1;
-        return current;
+        accumulator.total += 1;
+        return accumulator;
       },
       {
         ...initial,
@@ -61,13 +73,17 @@ class FakePollVotesRepository implements IPollVotesRepository {
   }
 
   public async findUniquePollVote({
+    poll_id,
     ip,
     user_agent,
   }: IFindUniquePollVoteDTO): Promise<PollVote | undefined> {
     return this.pollsVotes.find(
-      pollVote => pollVote.ip === ip && pollVote.user_agent === user_agent,
+      pollVote =>
+        pollVote.poll_id === poll_id &&
+        pollVote.ip === ip &&
+        pollVote.user_agent === user_agent,
     );
   }
 }
 
-export default FakePollVotesRepository;
+export default FakePollsVotesRepository;

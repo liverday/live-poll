@@ -11,10 +11,23 @@ class FakePollsRepository implements IPollsRepository {
     return this.polls.find(poll => poll.id === id);
   }
 
-  public async create(data: ICreatePollDTO): Promise<Poll> {
+  public async create({
+    alternatives,
+    ...data
+  }: ICreatePollDTO): Promise<Poll> {
     const poll = new Poll();
 
-    Object.assign(poll, { id: uuid() }, { ...data });
+    Object.assign(
+      poll,
+      { id: uuid() },
+      {
+        ...data,
+        alternatives: alternatives.map(alternative => ({
+          id: uuid(),
+          ...alternative,
+        })),
+      },
+    );
 
     this.polls.push(poll);
 

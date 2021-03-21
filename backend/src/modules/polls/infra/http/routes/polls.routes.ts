@@ -27,6 +27,12 @@ pollsRouter.get(
 pollsRouter.post(
   '/:id/vote',
   getUserAuthenticatedIfExists,
+  celebrate({
+    [Segments.BODY]: {
+      poll_id: Joi.string().uuid().required(),
+      poll_alternative_id: Joi.string().uuid().required(),
+    },
+  }),
   pollsVotesController.create,
 );
 

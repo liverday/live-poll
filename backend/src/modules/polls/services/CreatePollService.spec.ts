@@ -43,7 +43,7 @@ describe('CreatePollService', () => {
       alternatives,
     });
 
-    expect(poll.alternatives).toEqual(expect.arrayContaining(alternatives));
+    expect(poll.alternatives.length).toBe(alternatives.length);
   });
 
   it('should not be able to create a poll with inexistent user', async () => {

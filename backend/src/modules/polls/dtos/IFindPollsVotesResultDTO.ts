@@ -1,7 +1,5 @@
-import PollAlternative from '../infra/typeorm/entities/PollAlternative';
-
 interface IFindPollVoteResultItem {
-  alternative: PollAlternative;
+  poll_alternative_id: string;
   votes: number;
 }
 

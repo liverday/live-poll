@@ -1,4 +1,4 @@
-export default interface IPollVote {
+export default interface ICreatePollVoteDTO {
   poll_id: string;
   poll_alternative_id: string;
   ip: string;
