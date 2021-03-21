@@ -1,11 +1,33 @@
 import { Router } from 'express';
+import { celebrate, Segments, Joi } from 'celebrate';
+
 import ensureAuthenticated from '@modules/users/infra/http/middlewares/ensureAuthenticated';
+import getUserAuthenticatedIfExists from '@modules/users/infra/http/middlewares/getUserAuthenticatedIfExists';
+
 import PollsController from '../controllers/PollsController';
+import UserPollsController from '../controllers/UserPollsController';
+import PollsVotesController from '../controllers/PollsVotesController';
 
 const pollsRouter = Router();
 const pollsController = new PollsController();
+const userPollsController = new UserPollsController();
+const pollsVotesController = new PollsVotesController();
 
-pollsRouter.post('/', ensureAuthenticated, pollsController.create);
-pollsRouter.get('/:id', pollsController.show);
+pollsRouter.post('/', ensureAuthenticated, userPollsController.create);
+pollsRouter.get('/mine', ensureAuthenticated, userPollsController.index);
+pollsRouter.get(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+  }),
+  pollsController.show,
+);
+pollsRouter.post(
+  '/:id/vote',
+  getUserAuthenticatedIfExists,
+  pollsVotesController.create,
+);
 
 export default pollsRouter;

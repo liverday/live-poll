@@ -22,6 +22,10 @@ class PollsRepository implements IPollsRepository {
   public async save(data: Poll): Promise<Poll> {
     return this.ormRepository.save(data);
   }
+
+  public async findAllUserPolls(user_id: string): Promise<Poll[]> {
+    return this.ormRepository.find({ where: { user_id } });
+  }
 }
 
 export default PollsRepository;

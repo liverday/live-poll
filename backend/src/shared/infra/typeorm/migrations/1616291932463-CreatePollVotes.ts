@@ -33,8 +33,8 @@ export default class CreatePollVotes1616291932463
             isNullable: true,
           },
           {
-            name: 'mac_address',
-            type: 'uuid',
+            name: 'ip',
+            type: 'varchar',
           },
           {
             name: 'user_agent',

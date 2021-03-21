@@ -5,4 +5,5 @@ export default interface IPollsRepository {
   findPollById(id: string): Promise<Poll | undefined>;
   create(data: ICreatePollDTO): Promise<Poll>;
   save(data: Poll): Promise<Poll>;
+  findAllUserPolls(user_id: string): Promise<Poll[]>;
 }

@@ -30,6 +30,10 @@ class FakePollsRepository implements IPollsRepository {
 
     return data;
   }
+
+  public async findAllUserPolls(user_id: string): Promise<Poll[]> {
+    return this.polls.filter(poll => poll.user_id === user_id);
+  }
 }
 
 export default FakePollsRepository;
