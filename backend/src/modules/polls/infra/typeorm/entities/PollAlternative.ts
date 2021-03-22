@@ -20,6 +20,9 @@ class PollAlternative {
   @Column()
   color: string;
 
+  @Column()
+  seq: number;
+
   @ManyToOne(() => Poll, poll => poll.alternatives)
   @JoinColumn({ name: 'poll_id' })
   poll: Poll;

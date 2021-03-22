@@ -13,8 +13,28 @@ const pollsController = new PollsController();
 const userPollsController = new UserPollsController();
 const pollsVotesController = new PollsVotesController();
 
-pollsRouter.post('/', ensureAuthenticated, userPollsController.create);
+// authenticated routes
+pollsRouter.post(
+  '/',
+  ensureAuthenticated,
+  celebrate({
+    [Segments.BODY]: {
+      title: Joi.string().required(),
+      description: Joi.string(),
+      alternatives: Joi.array().items(
+        Joi.object({
+          title: Joi.string().required(),
+          color: Joi.string().required(),
+        }),
+      ),
+      ends_at: Joi.date().required(),
+    },
+  }),
+  userPollsController.create,
+);
 pollsRouter.get('/mine', ensureAuthenticated, userPollsController.index);
+
+// unauthenticated routes
 pollsRouter.get(
   '/:id',
   celebrate({
@@ -28,12 +48,23 @@ pollsRouter.post(
   '/:id/vote',
   getUserAuthenticatedIfExists,
   celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
     [Segments.BODY]: {
-      poll_id: Joi.string().uuid().required(),
       poll_alternative_id: Joi.string().uuid().required(),
     },
   }),
   pollsVotesController.create,
+);
+pollsRouter.get(
+  '/:id/results',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().uuid().required(),
+    },
+  }),
+  pollsVotesController.show,
 );
 
 export default pollsRouter;

@@ -1,4 +1,5 @@
 import { injectable, inject } from 'tsyringe';
+import { isBefore } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
@@ -21,6 +22,7 @@ class CreatePollService {
     title,
     description,
     alternatives,
+    ends_at,
   }: ICreatePollDTO): Promise<Poll> {
     const user = await this.usersRepository.findById(user_id);
 
@@ -32,11 +34,19 @@ class CreatePollService {
       throw new AppError('Should have one or more alternatives');
     }
 
+    if (isBefore(ends_at, new Date())) {
+      throw new AppError('Should ends after current date');
+    }
+
     const poll = await this.pollsRepository.create({
       user_id,
       title,
       description,
-      alternatives,
+      alternatives: alternatives.map((alternative, index) => ({
+        ...alternative,
+        seq: index + 1,
+      })),
+      ends_at,
     });
 
     await this.pollsRepository.save(poll);

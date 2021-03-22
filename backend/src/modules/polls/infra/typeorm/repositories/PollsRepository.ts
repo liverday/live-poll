@@ -12,7 +12,12 @@ class PollsRepository implements IPollsRepository {
   }
 
   public async findPollById(id: string): Promise<Poll | undefined> {
-    return this.ormRepository.findOne(id);
+    return this.ormRepository
+      .createQueryBuilder('polls')
+      .leftJoinAndSelect('polls.alternatives', 'alternatives')
+      .where('polls.id = :poll_id', { poll_id: id })
+      .orderBy('alternatives.seq', 'ASC')
+      .getOne();
   }
 
   public async create(data: ICreatePollDTO): Promise<Poll> {

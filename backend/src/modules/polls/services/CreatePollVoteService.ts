@@ -1,8 +1,12 @@
 import { injectable, inject } from 'tsyringe';
+import { isBefore } from 'date-fns';
 
 import AppError from '@shared/errors/AppError';
 import IUsersRepository from '@modules/users/repositories/IUsersRepository';
+import IWebSocketProvider from '@shared/container/providers/WebSocketProvider/models/IWebSocketProvider';
+
 import User from '@modules/users/infra/typeorm/entities/User';
+
 import ICreatePollVoteDTO from '../dtos/ICreatePollVoteDTO';
 import PollVote from '../infra/typeorm/entities/PollVote';
 import IPollsVotesRepository from '../repositories/IPollsVotesRepository';
@@ -19,6 +23,9 @@ class CreatePollVoteService {
 
     @inject('PollsVotesRepository')
     private pollsVotesRepository: IPollsVotesRepository,
+
+    @inject('WebSocketProvider')
+    private webSocketProvider: IWebSocketProvider,
   ) {}
 
   public async execute({
@@ -32,6 +39,10 @@ class CreatePollVoteService {
 
     if (!poll) {
       throw new AppError('Poll not found');
+    }
+
+    if (isBefore(poll.ends_at, new Date())) {
+      throw new AppError('Poll Expired');
     }
 
     const alternativeFound = poll.alternatives.find(
@@ -66,6 +77,14 @@ class CreatePollVoteService {
       poll_alternative_id,
       ip,
       user_agent,
+    });
+
+    await this.pollsVotesRepository.save(pollVote);
+
+    const connections = this.webSocketProvider.findConnections(poll_id);
+
+    this.webSocketProvider.sendMessage(connections, 'NEW_VOTE', {
+      poll_alternative_id,
     });
 
     return pollVote;

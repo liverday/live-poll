@@ -38,6 +38,9 @@ class Poll {
   })
   alternatives: PollAlternative[];
 
+  @Column('timestamp with time zone')
+  ends_at: Date;
+
   @CreateDateColumn()
   created_at: Date;
 

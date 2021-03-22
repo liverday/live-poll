@@ -33,6 +33,10 @@ export default class CreatePollTable1616282053457
             isNullable: true,
           },
           {
+            name: 'ends_at',
+            type: 'timestamp with time zone',
+          },
+          {
             name: 'created_at',
             type: 'timestamp',
             default: 'now()',

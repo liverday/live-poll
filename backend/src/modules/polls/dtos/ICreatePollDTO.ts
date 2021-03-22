@@ -8,4 +8,5 @@ export default interface ICreatePollDTO {
   title: string;
   description: string;
   alternatives: IPollAlternative[];
+  ends_at: Date;
 }

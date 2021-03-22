@@ -38,6 +38,7 @@ describe('FindPollService', () => {
       title: 'Minha votação',
       description: 'Essa votação é demais',
       alternatives,
+      ends_at: new Date(),
     });
 
     const poll = await findPollService.execute({

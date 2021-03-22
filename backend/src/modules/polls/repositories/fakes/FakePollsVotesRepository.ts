@@ -34,27 +34,25 @@ class FakePollsVotesRepository implements IPollsVotesRepository {
 
   public async findPollResultById(
     poll_id: string,
-  ): Promise<IFindPollVotesResultDTO | undefined> {
+  ): Promise<IFindPollVotesResultDTO> {
     const pollVotes = this.pollsVotes.filter(
       pollVote => pollVote.poll_id === poll_id,
     );
-
-    if (pollVotes.length === 0) return undefined;
 
     const initial: IFindPollVotesResultDTO = {
       items: [],
       total: 0,
     };
 
-    const result = this.pollsVotes.reduce(
+    const result = pollVotes.reduce(
       (accumulator, current, _) => {
         const foundIndex = accumulator.items.findIndex(
           item => item.poll_alternative_id === current.poll_alternative_id,
         );
 
-        if (foundIndex === 0) {
+        if (foundIndex < 0) {
           accumulator.items.push({
-            poll_alternative_id: current.alternative.id,
+            poll_alternative_id: current.poll_alternative_id,
             votes: 1,
           });
         } else {

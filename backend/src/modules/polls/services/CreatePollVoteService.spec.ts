@@ -1,5 +1,8 @@
+import { addDays, subDays } from 'date-fns';
+
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import AppError from '@shared/errors/AppError';
+import FakeWebSocketProvider from '@shared/container/providers/WebSocketProvider/fakes/FakeWebSocketProvider';
 import FakePollsVotesRepository from '../repositories/fakes/FakePollsVotesRepository';
 import FakePollsRepository from '../repositories/fakes/FakePollsRepository';
 import CreatePollVoteService from './CreatePollVoteService';
@@ -7,6 +10,7 @@ import CreatePollVoteService from './CreatePollVoteService';
 let fakeUsersRepository: FakeUsersRepository;
 let fakePollsRepository: FakePollsRepository;
 let fakePollsVotesRepository: FakePollsVotesRepository;
+let fakeWebSocketProvider: FakeWebSocketProvider;
 let createPollVoteService: CreatePollVoteService;
 
 describe('CreatePollVoteService', () => {
@@ -14,10 +18,12 @@ describe('CreatePollVoteService', () => {
     fakeUsersRepository = new FakeUsersRepository();
     fakePollsRepository = new FakePollsRepository();
     fakePollsVotesRepository = new FakePollsVotesRepository();
+    fakeWebSocketProvider = new FakeWebSocketProvider();
     createPollVoteService = new CreatePollVoteService(
       fakeUsersRepository,
       fakePollsRepository,
       fakePollsVotesRepository,
+      fakeWebSocketProvider,
     );
   });
 
@@ -41,6 +47,7 @@ describe('CreatePollVoteService', () => {
       title: 'Minha votação',
       description: 'Essa votação é demais',
       alternatives,
+      ends_at: addDays(new Date(), 7),
     });
 
     const [alternativeOne] = savedAlternatives;
@@ -84,6 +91,7 @@ describe('CreatePollVoteService', () => {
       title: 'Minha votação',
       description: 'Essa votação é demais',
       alternatives,
+      ends_at: addDays(new Date(), 7),
     });
 
     await expect(
@@ -116,6 +124,7 @@ describe('CreatePollVoteService', () => {
       title: 'Minha votação',
       description: 'Essa votação é demais',
       alternatives,
+      ends_at: addDays(new Date(), 7),
     });
 
     const [alternativeOne, alternativeTwo] = savedAlternatives;
@@ -163,6 +172,7 @@ describe('CreatePollVoteService', () => {
       title: 'Minha votação',
       description: 'Essa votação é demais',
       alternatives,
+      ends_at: addDays(new Date(), 7),
     });
 
     const [alternativeOne] = savedAlternatives;
@@ -178,5 +188,40 @@ describe('CreatePollVoteService', () => {
     expect(pollVote.poll_id).toBe(poll_id);
     expect(pollVote.poll_alternative_id).toBe(alternativeOne.id);
     expect(pollVote.user_id).toBe(user.id);
+  });
+
+  it('should be able to reject a vote on a poll that is expired', async () => {
+    const alternatives = [
+      {
+        title: 'Opção 1',
+        color: '#fff',
+      },
+      {
+        title: 'Opção 2',
+        color: '#f0fea0',
+      },
+    ];
+
+    const {
+      id: poll_id,
+      alternatives: savedAlternatives,
+    } = await fakePollsRepository.create({
+      user_id: 'teste',
+      title: 'Minha votação',
+      description: 'Essa votação é demais',
+      alternatives,
+      ends_at: subDays(new Date(), 7),
+    });
+
+    const [alternativeOne] = savedAlternatives;
+
+    await expect(
+      createPollVoteService.execute({
+        poll_id,
+        poll_alternative_id: alternativeOne.id,
+        ip: '123',
+        user_agent: 'chrome',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });

@@ -23,7 +23,7 @@ class PollsVotesRepository implements IPollsVotesRepository {
 
   public async findPollResultById(
     poll_id: string,
-  ): Promise<IFindPollsVotesResultDTO | undefined> {
+  ): Promise<IFindPollsVotesResultDTO> {
     const entries = await this.ormRepository
       .createQueryBuilder()
       .select('poll_alternative_id')
@@ -39,8 +39,12 @@ class PollsVotesRepository implements IPollsVotesRepository {
 
     return entries.reduce(
       (accumulator, current) => {
-        accumulator.items.push({ ...current });
-        accumulator.total += current.votes;
+        const { votes, poll_alternative_id } = current;
+        accumulator.items.push({
+          poll_alternative_id,
+          votes: parseInt(votes, 2),
+        });
+        accumulator.total += parseInt(votes, 2);
 
         return accumulator;
       },

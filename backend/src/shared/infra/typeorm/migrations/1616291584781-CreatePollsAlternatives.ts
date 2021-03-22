@@ -28,6 +28,10 @@ export default class CreatePollsAlternatives1616291584781
             type: 'varchar',
           },
           {
+            name: 'seq',
+            type: 'integer',
+          },
+          {
             name: 'color',
             type: 'varchar',
           },

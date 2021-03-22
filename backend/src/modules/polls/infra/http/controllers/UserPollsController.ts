@@ -7,7 +7,7 @@ import ListUserPollsService from '@modules/polls/services/ListUserPollsService';
 
 class UserPollsController {
   async create(request: Request, response: Response): Promise<Response> {
-    const { title, description, alternatives } = request.body;
+    const { title, description, alternatives, ends_at } = request.body;
     const { id: user_id } = request.user;
     const createPollService = container.resolve(CreatePollService);
 
@@ -16,6 +16,7 @@ class UserPollsController {
       title,
       description,
       alternatives,
+      ends_at,
     });
 
     return response.json({
