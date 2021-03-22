@@ -23,6 +23,7 @@ describe('ListUserPollsService', () => {
               color: '#fff',
             },
           ],
+          ends_at: new Date(),
         });
       }),
     );
