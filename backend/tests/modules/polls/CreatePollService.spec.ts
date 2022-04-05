@@ -4,7 +4,7 @@ import AppError from '@shared/errors/AppError';
 
 import FakePollsRepository from '@modules/polls/repositories/fakes/FakePollsRepository';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-import CreatePollService from './CreatePollService';
+import CreatePollService from '@modules/polls/services/CreatePollService';
 
 let createPollService: CreatePollService;
 let fakePollsRepository: FakePollsRepository;

@@ -19,6 +19,7 @@ class SocketIOWebSocketProvider implements IWebSocketProvider {
 
     this.io.on('connection', (socket: Socket) => {
       const { poll_id } = socket.handshake.query;
+      
       this.connections.push({
         socket_id: socket.id,
         poll_id: String(poll_id),

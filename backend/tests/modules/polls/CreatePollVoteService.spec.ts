@@ -3,9 +3,9 @@ import { addDays, subDays } from 'date-fns';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import AppError from '@shared/errors/AppError';
 import FakeWebSocketProvider from '@shared/container/providers/WebSocketProvider/fakes/FakeWebSocketProvider';
-import FakePollsVotesRepository from '../repositories/fakes/FakePollsVotesRepository';
-import FakePollsRepository from '../repositories/fakes/FakePollsRepository';
-import CreatePollVoteService from './CreatePollVoteService';
+import FakePollsVotesRepository from '@modules/polls/repositories/fakes/FakePollsVotesRepository';
+import FakePollsRepository from '@modules/polls/repositories/fakes/FakePollsRepository';
+import CreatePollVoteService from '@modules/polls/services/CreatePollVoteService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let fakePollsRepository: FakePollsRepository;

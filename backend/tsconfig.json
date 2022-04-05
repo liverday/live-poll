@@ -1,27 +1,24 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "paths": {
+            "@modules/*": ["./src/modules/*"],
+            "@config/*": ["./src/config/*"],
+            "@shared/*": ["./src/shared/*"],
+            "@mocks/*": ["./tests/mocks/*"]
+        },
+        "target": "es2017",
+        "experimentalDecorators": true,
+        "allowJs": true,
         "module": "commonjs",
         "outDir": "./dist",
-        "rootDir": "./src",
-        "strict": true,
-        "strictPropertyInitialization": false,
-        "baseUrl": "./src",
-        "paths": {
-            "@modules/*": [
-                "modules/*"
-            ],
-            "@config/*": [
-                "config/*"
-            ],
-            "@shared/*": [
-                "shared/*"
-            ]
-        },
+        "baseUrl": ".",
+        "rootDir": ".",
         "esModuleInterop": true,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": false,
+        "noImplicitAny": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "allowSyntheticDefaultImports": true,
+        "emitDecoratorMetadata": true
     }
 }

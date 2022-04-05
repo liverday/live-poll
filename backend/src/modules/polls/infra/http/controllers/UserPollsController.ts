@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { classToClass } from 'class-transformer';
+import { instanceToPlain } from 'class-transformer';
 
 import CreatePollService from '@modules/polls/services/CreatePollService';
 import ListUserPollsService from '@modules/polls/services/ListUserPollsService';
@@ -21,7 +21,7 @@ class UserPollsController {
 
     return response.json({
       ...poll,
-      user: classToClass(poll.user),
+      user: instanceToPlain(poll.user),
     });
   }
 
@@ -34,7 +34,7 @@ class UserPollsController {
       user_id,
     });
 
-    return response.json(classToClass(polls));
+    return response.json(instanceToPlain(polls));
   }
 }
 

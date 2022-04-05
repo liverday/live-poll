@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import ICreatePollDTO from '@modules/polls/dtos/ICreatePollDTO';
 import Poll from '@modules/polls/infra/typeorm/entities/Poll';
 import IPollsRepository from '../IPollsRepository';
+import IListUserPollsPageableDTO from '@modules/polls/dtos/IListUserPollsPageableDTO';
 
 class FakePollsRepository implements IPollsRepository {
   private polls: Poll[] = [];
@@ -44,8 +45,8 @@ class FakePollsRepository implements IPollsRepository {
     return data;
   }
 
-  public async findAllUserPolls(user_id: string): Promise<Poll[]> {
-    return this.polls.filter(poll => poll.user_id === user_id);
+  public async findAllUserPolls({ user_id, page, size }: IListUserPollsPageableDTO): Promise<Poll[]> {
+    return this.polls.filter(poll => poll.user_id === user_id).filter((_, index) => index >= (page - 1) * size && index < page * size);
   }
 }
 

@@ -35,6 +35,7 @@ class Poll {
 
   @OneToMany(() => PollAlternative, pollAlternative => pollAlternative.poll, {
     cascade: true,
+    lazy: true,
   })
   alternatives: PollAlternative[];
 

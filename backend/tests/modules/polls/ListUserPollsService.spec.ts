@@ -1,5 +1,5 @@
 import FakePollsRepository from '@modules/polls/repositories/fakes/FakePollsRepository';
-import ListUserPollsService from './ListUserPollsService';
+import ListUserPollsService from '@modules/polls/services/ListUserPollsService';
 
 let fakePollsRepository: FakePollsRepository;
 let listUserPollsService: ListUserPollsService;

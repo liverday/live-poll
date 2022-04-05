@@ -3,6 +3,7 @@ import { Repository, getRepository } from 'typeorm';
 import IPollsRepository from '@modules/polls/repositories/IPollsRepository';
 import ICreatePollDTO from '@modules/polls/dtos/ICreatePollDTO';
 import Poll from '../entities/Poll';
+import IListUserPollsPageableDTO from '@modules/polls/dtos/IListUserPollsPageableDTO';
 
 class PollsRepository implements IPollsRepository {
   private ormRepository: Repository<Poll>;
@@ -28,8 +29,8 @@ class PollsRepository implements IPollsRepository {
     return this.ormRepository.save(data);
   }
 
-  public async findAllUserPolls(user_id: string): Promise<Poll[]> {
-    return this.ormRepository.find({ where: { user_id } });
+  public async findAllUserPolls({ user_id, page, size }: IListUserPollsPageableDTO): Promise<Poll[]> {
+    return this.ormRepository.find({ where: { user_id }, take: size, skip: (page - 1) * size });
   }
 }
 

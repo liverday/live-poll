@@ -5,6 +5,8 @@ import IPollsRepository from '../repositories/IPollsRepository';
 
 interface IRequest {
   user_id: string;
+  page?: number;
+  size?: number
 }
 
 @injectable()
@@ -14,8 +16,8 @@ class ListUserPollsService {
     private pollsRepository: IPollsRepository,
   ) {}
 
-  public async execute({ user_id }: IRequest): Promise<Poll[]> {
-    return this.pollsRepository.findAllUserPolls(user_id);
+  public async execute({ user_id, page = 1, size = 20 }: IRequest): Promise<Poll[]> {
+    return this.pollsRepository.findAllUserPolls({ user_id, page, size });
   }
 }
 

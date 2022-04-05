@@ -1,7 +1,9 @@
+import '@mocks/environments/auth.mock'
+
 import FakeHashProvider from '@shared/container/providers/HashProvider/fakes/FakeHashProvider';
 import AppError from '@shared/errors/AppError';
-import AuthenticateUserService from './AuthenticateUserService';
-import FakeUsersRepository from '../repositories/fakes/FakeUsersRepository';
+import AuthenticateUserService from '@modules/users/services/AuthenticateUserService';
+import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 
 let fakeHashProvider: FakeHashProvider;
 let fakeUsersRepository: FakeUsersRepository;

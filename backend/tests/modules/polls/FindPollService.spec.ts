@@ -2,7 +2,7 @@ import AppError from '@shared/errors/AppError';
 
 import FakePollsRepository from '@modules/polls/repositories/fakes/FakePollsRepository';
 import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
-import FindPollService from './FindPollService';
+import FindPollService from '@modules/polls/services/FindPollService';
 
 let fakeUsersRepository: FakeUsersRepository;
 let findPollService: FindPollService;

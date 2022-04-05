@@ -1,8 +1,8 @@
 import AppError from '@shared/errors/AppError';
 
-import FakePollsRepository from '../repositories/fakes/FakePollsRepository';
-import FakePollsVotesRepository from '../repositories/fakes/FakePollsVotesRepository';
-import FindPollResultsService from './FindPollResultsService';
+import FakePollsRepository from '@modules/polls/repositories/fakes/FakePollsRepository';
+import FakePollsVotesRepository from '@modules/polls/repositories/fakes/FakePollsVotesRepository';
+import FindPollResultsService from '@modules/polls/services/FindPollResultsService';
 
 let fakePollsRepository: FakePollsRepository;
 let fakePollsVotesRepository: FakePollsVotesRepository;
